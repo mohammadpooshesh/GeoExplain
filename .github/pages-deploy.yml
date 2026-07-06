@@ -1,0 +1,60 @@
+# GitHub Pages deploy workflow for GeoExplain.
+#
+# NOTE: This file must live at .github/workflows/deploy.yml to be active.
+# It was pushed here because the API token used for publishing did not have
+# the "workflow" scope. To activate it:
+#   1. Open this file on GitHub and click the pencil (Edit) icon.
+#   2. In the filename box, change "pages-deploy.yml" to "workflows/deploy.yml".
+#   3. Commit the change. The workflow will run and publish the site to
+#      https://mohammadpooshesh.github.io/GeoExplain/ automatically.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build
+        run: npm run build
+      - name: Assemble site
+        run: |
+          mkdir -p _site/dist
+          cp index.html styles.css _site/
+          cp dist/app.js _site/dist/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
