@@ -1,0 +1,21 @@
+{
+  "name": "geoexplain",
+  "version": "1.0.0",
+  "description": "Understand Spatial SQL visually — an interactive playground that shows what PostGIS-style spatial functions actually do to your geometry.",
+  "homepage": "https://mohammadpooshesh.github.io/GeoExplain/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohammadpooshesh/GeoExplain.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
